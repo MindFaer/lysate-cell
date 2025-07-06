@@ -103,9 +103,8 @@ public class LysateCell {
 
     public static final DeferredRegister.DataComponents DATA_COMPONENTS = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, MODID);
 
-
-
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<AwakenedItemData>> BATTERY_CELL_COMPONENT = DATA_COMPONENTS.registerComponentType("awakened_item");
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<BatteryCellDataHandler>> BATTERY_CELL_COMPONENT = DATA_COMPONENTS.registerComponentType("battery_cell",
+            (builder) -> builder.persistent(BatteryCellDataHandler.CODEC).networkSynchronized(BatteryCellDataHandler.STREAM_CODEC));
 
 
 
