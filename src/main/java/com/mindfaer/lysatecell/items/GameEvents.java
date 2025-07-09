@@ -11,13 +11,13 @@ import net.neoforged.neoforge.event.tick.EntityTickEvent;
 
 @EventBusSubscriber(modid = LysateCell.MODID, bus = EventBusSubscriber.Bus.GAME)
 
-public class GameEventClass {
+public class GameEvents {
 
     @SubscribeEvent
     public static void onEntityTick(EntityTickEvent.Post event) {
         Entity entity = event.getEntity();
         if (entity instanceof LivingEntity living) {
-            ServerUtilities.forBatteryInItems(living, BatteryCellClass::inventoryTick);
+            ServerUtilities.forBatteryInItems(living, BatteryCell::inventoryTick);
         }
     }
 }
