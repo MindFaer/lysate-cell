@@ -13,6 +13,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -22,16 +23,17 @@ import java.util.*;
 
 public class BatteryCellClass {
 
-    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slot, boolean selected) {
+
+    public static void inventoryTick(ItemStack itemStack, LivingEntity entity, OmniSlot slot) {
 
         // Is if comes from the client, or if the entity is not a player,
-        if (level.isClientSide || !(entity instanceof Player)) return;
+        if (!(entity instanceof Player)) return;
 
         // If the game time is not divisable by 20 with no remainder, stop
-        if (level.getGameTime() % 20 != 0) return;
+        if (entity.level().getGameTime() % 20 != 0) return;
 
         // Check if it has battery_cell data components, doesn't have a battery in, or if the battery is empty
-        BatteryCellDataHandler battery_cell = stack.get(LysateCell.BATTERY_CELL_COMPONENT);
+        BatteryCellDataHandler battery_cell = itemStack.get(LysateCell.BATTERY_CELL_COMPONENT);
         if (battery_cell == null || battery_cell.cellin() != 1 || battery_cell.cellcharge() <= 0) return;
 
         /*
@@ -42,11 +44,11 @@ public class BatteryCellClass {
         if (amountAvailable <= 0) return;
 
         // Check if this dang thing takes energy
-        var object = stack.getCapability(Capabilities.EnergyStorage.ITEM);
+        var object = itemStack.getCapability(Capabilities.EnergyStorage.ITEM);
         if (object != null) {
 
             // Get storage capacity
-            IEnergyStorage energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
+            IEnergyStorage energyStorage = itemStack.getCapability(Capabilities.EnergyStorage.ITEM);
 
             // Get 1/120 of cell size and give it to the item
             int energyin = energyStorage.receiveEnergy((battery_cell.cellsize()) / 120, false);
@@ -59,7 +61,7 @@ public class BatteryCellClass {
                         battery_cell.celltype(),
                         battery_cell.cellsize()
                 );
-                stack.set(LysateCell.BATTERY_CELL_COMPONENT, updated);
+                itemStack.set(LysateCell.BATTERY_CELL_COMPONENT, updated);
             }
         }
     }

@@ -94,15 +94,17 @@ public class LysateCell {
 
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
 
-    public static final DeferredBlock<Block> LYSATE_CELL_BLOCK = BLOCKS.registerSimpleBlock("LYSATE_CELL_BLOCK", BlockBehaviour.Properties.of().mapColor(MapColor.STONE));
+    public static final DeferredBlock<Block> LYSATE_CELL_BLOCK = BLOCKS.registerSimpleBlock("lysate_cell_block", BlockBehaviour.Properties.of().mapColor(MapColor.STONE));
 
-    public static final DeferredItem<BlockItem> LYSATE_CELL_BLOCK_ITEM = ITEMS.registerSimpleBlockItem("LYSATE_CELL_BLOCK", LYSATE_CELL_BLOCK);
+    public static final DeferredItem<BlockItem> LYSATE_CELL_BLOCK_ITEM = ITEMS.registerSimpleBlockItem("lysate_cell_block_item", LYSATE_CELL_BLOCK);
 
-    public static final DeferredItem<Item> LYSATE_CELL_ITEM = ITEMS.registerSimpleItem("LYSATE_CELL_ITEM", new Item.Properties());
+    public static final DeferredItem<Item> LYSATE_CELL_ITEM = ITEMS.registerSimpleItem("lysate_cell_item", new Item.Properties());
 
 
     public static final DeferredRegister.DataComponents DATA_COMPONENTS = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, MODID);
 
+
+    // Battery Cell Data
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<BatteryCellDataHandler>> BATTERY_CELL_COMPONENT = DATA_COMPONENTS.registerComponentType("battery_cell",
             (builder) -> builder.persistent(BatteryCellDataHandler.CODEC).networkSynchronized(BatteryCellDataHandler.STREAM_CODEC));
 
@@ -114,7 +116,9 @@ public class LysateCell {
             .icon(() -> LYSATE_CELL_ITEM.get().getDefaultInstance())
             .displayItems((parameters, output) -> {
                 output.accept(LYSATE_CELL_ITEM.get());
+                output.accept(LYSATE_CELL_BLOCK_ITEM.get());
             }).build());
+
 
     // The constructor for the mod class is the first code that is run when your mod is loaded.
     // FML will recognize some parameter types like IEventBus or ModContainer and pass them in automatically.
@@ -152,6 +156,7 @@ public class LysateCell {
     // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
     @EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class ClientModEvents {
+
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
 
