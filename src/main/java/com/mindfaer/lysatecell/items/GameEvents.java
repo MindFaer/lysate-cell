@@ -16,8 +16,9 @@ public class GameEvents {
     @SubscribeEvent
     public static void onEntityTick(EntityTickEvent.Post event) {
         Entity entity = event.getEntity();
+
         if (entity instanceof LivingEntity living) {
-            ServerUtilities.forBatteryInItems(living, BatteryCell::inventoryTick);
+            ServerUtilities.forBatteryInItems(living, BatteryCellLogic::inventoryTick);
         }
     }
 }

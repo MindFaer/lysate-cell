@@ -8,25 +8,25 @@ import net.minecraft.network.codec.StreamCodec;
 
 import java.util.Objects;
 
-public record BatteryCellDataHandler (byte cellin, int cellcharge, int celltype, int cellsize) {
+public record BatteryCellDataHandler (boolean cellin, int celltype, int cellsize, int cellcharge) {
 
 
     public static final Codec<BatteryCellDataHandler> CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
-                    Codec.BYTE.fieldOf("cell_in").forGetter(BatteryCellDataHandler::cellin),
-                    Codec.INT.fieldOf("cell_charge").forGetter(BatteryCellDataHandler::cellcharge),
+                    Codec.BOOL.fieldOf("cell_in").forGetter(BatteryCellDataHandler::cellin),
                     Codec.INT.fieldOf("cell_type").forGetter(BatteryCellDataHandler::celltype),
-                    Codec.INT.fieldOf("cell_size").forGetter(BatteryCellDataHandler::cellsize)
+                    Codec.INT.fieldOf("cell_size").forGetter(BatteryCellDataHandler::cellsize),
+                    Codec.INT.fieldOf("cell_charge").forGetter(BatteryCellDataHandler::cellcharge)
 
-            ).apply(instance, BatteryCellDataHandler::new)
+                    ).apply(instance, BatteryCellDataHandler::new)
     );
 
 
     public static final StreamCodec<ByteBuf, BatteryCellDataHandler> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.BYTE, BatteryCellDataHandler::cellin,
-            ByteBufCodecs.INT, BatteryCellDataHandler::cellcharge,
+            ByteBufCodecs.BOOL, BatteryCellDataHandler::cellin,
             ByteBufCodecs.INT, BatteryCellDataHandler::celltype,
             ByteBufCodecs.INT, BatteryCellDataHandler::cellsize,
+            ByteBufCodecs.INT, BatteryCellDataHandler::cellcharge,
 
             BatteryCellDataHandler::new
     );
@@ -35,8 +35,7 @@ public record BatteryCellDataHandler (byte cellin, int cellcharge, int celltype,
 
     @Override
     public int hashCode() {
-        return this.cellsize() * 11 + cellcharge() * 19 + cellin() * 3  +celltype() * 17;
-
+        return (cellin() ? 1 : 0) * 11 + celltype * 3  + cellsize * 17 + cellcharge * 7;
     }
 
     @Override
@@ -44,7 +43,7 @@ public record BatteryCellDataHandler (byte cellin, int cellcharge, int celltype,
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BatteryCellDataHandler that = (BatteryCellDataHandler) o;
-        return cellin == that.cellin && cellcharge == that.cellcharge && celltype == that.celltype && cellsize == that.cellsize;
+        return cellin == that.cellin && celltype == that.celltype && cellsize == that.cellsize && cellcharge == that.cellcharge;
     }
 
 }

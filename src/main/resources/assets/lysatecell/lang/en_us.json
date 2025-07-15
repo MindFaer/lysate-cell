@@ -1,6 +1,6 @@
 {
   "itemGroup.lysatecell": "Lysate Cell",
-  "item.lysatecell.lysate_cell_item": "Lysate Cell",
+  "item.lysatecell.battery_cell": "Battery Cell",
 
   "lysatecell.configuration.title": "Example Mod Configs",
   "lysatecell.configuration.section.lysatecell.common.toml": "Example Mod Configs",
