@@ -2,10 +2,13 @@ package com.mindfaer.lysatecell;
 
 import com.mindfaer.lysatecell.items.BatteryCellDataHandler;
 import com.mindfaer.lysatecell.items.BatteryItem;
+import com.mojang.serialization.Codec;
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.ItemCapability;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.energy.ComponentEnergyStorage;
 import net.neoforged.neoforge.energy.EnergyStorage;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.items.IItemHandler;
@@ -58,6 +61,10 @@ public class LysateCell {
     // Battery Cell Data
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<BatteryCellDataHandler>> BATTERY_CELL_COMPONENT = DATA_COMPONENTS.registerComponentType("battery_cell",
             (builder) -> builder.persistent(BatteryCellDataHandler.CODEC).networkSynchronized(BatteryCellDataHandler.STREAM_CODEC));
+
+    // Energy Component
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> LYSATE_ENERGY = DATA_COMPONENTS.registerComponentType("lysate_energy",
+            (builder) -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT));
 
 
     //Items and blocks
@@ -115,7 +122,6 @@ public class LysateCell {
 
         NeoForge.EVENT_BUS.register(this);
 
-
         modEventBus.addListener(this::addCreative);
 
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
@@ -133,25 +139,25 @@ public class LysateCell {
     }
 
     // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
-    @EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-    public static class ClientModEvents {
+    @EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD)
+    public class ClientModEvents {
 
         @SubscribeEvent
         public static void registerCapabilities(RegisterCapabilitiesEvent event) {
             event.registerItem(
                     Capabilities.EnergyStorage.ITEM,
 
+
                     (itemStack, context) ->
 
-                            new EnergyStorage(1024, 1024, 1024, 0),
+                            new ComponentEnergyStorage(
+                                    itemStack,
+                                    LysateCell.LYSATE_ENERGY.get(),
+                                    3200, 100, 100),
 
                     BATTERY_CELL,
                     DUMMY_ITEM
             );
-        }
-
-        @SubscribeEvent
-        public static void onClientSetup(FMLClientSetupEvent event) {
         }
     }
 }

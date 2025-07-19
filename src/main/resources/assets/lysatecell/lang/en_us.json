@@ -2,11 +2,6 @@
   "itemGroup.lysatecell": "Lysate Cell",
   "item.lysatecell.battery_cell": "Battery Cell",
 
-  "lysatecell.configuration.title": "Example Mod Configs",
-  "lysatecell.configuration.section.lysatecell.common.toml": "Example Mod Configs",
-  "lysatecell.configuration.section.lysatecell.common.toml.title": "Example Mod Configs",
-  "lysatecell.configuration.items": "Item List",
-  "lysatecell.configuration.logDirtBlock": "Log Dirt Block",
-  "lysatecell.configuration.magicNumberIntroduction": "Magic Number Text",
-  "lysatecell.configuration.magicNumber": "Magic Number"
+  "tooltip.lysatecell.energy": "%s/%s RF"
+
 }
