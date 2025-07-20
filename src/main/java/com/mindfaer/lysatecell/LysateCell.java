@@ -6,16 +6,10 @@ import com.mojang.serialization.Codec;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.capabilities.ItemCapability;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.energy.ComponentEnergyStorage;
-import net.neoforged.neoforge.energy.EnergyStorage;
-import net.neoforged.neoforge.energy.IEnergyStorage;
-import net.neoforged.neoforge.items.IItemHandler;
 import org.slf4j.Logger;
-
 import com.mojang.logging.LogUtils;
-
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
@@ -25,14 +19,12 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
-import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
@@ -73,12 +65,39 @@ public class LysateCell {
 
     public static final DeferredItem<BlockItem> LYSATE_CELL_BLOCK_ITEM = ITEMS.registerSimpleBlockItem("lysate_cell_block_item", LYSATE_CELL_BLOCK);
 
-    public static final DeferredItem<Item> BATTERY_CELL = ITEMS.registerItem(
-            "battery_cell",
+    public static final DeferredItem<Item> BASIC_BATTERY_CELL = ITEMS.registerItem(
+            "basic_battery_cell",
             registryName -> new BatteryItem(
                     new Item.Properties()
                             .stacksTo(1)
-                            .component(BATTERY_CELL_COMPONENT, new BatteryCellDataHandler(false, 1, 1024, 0))
+                            .component(BATTERY_CELL_COMPONENT, new BatteryCellDataHandler(false, 1, 10000, 0))
+            )
+    );
+
+    public static final DeferredItem<Item> ADVANCED_BATTERY_CELL = ITEMS.registerItem(
+            "advanced_battery_cell",
+            registryName -> new BatteryItem(
+                    new Item.Properties()
+                            .stacksTo(1)
+                            .component(BATTERY_CELL_COMPONENT, new BatteryCellDataHandler(false, 2, 100000, 0))
+            )
+    );
+
+    public static final DeferredItem<Item> EXTREME_BATTERY_CELL = ITEMS.registerItem(
+            "extreme_battery_cell",
+            registryName -> new BatteryItem(
+                    new Item.Properties()
+                            .stacksTo(1)
+                            .component(BATTERY_CELL_COMPONENT, new BatteryCellDataHandler(false, 3, 1000000, 0))
+            )
+    );
+
+    public static final DeferredItem<Item> LYSATE_BATTERY_CELL = ITEMS.registerItem(
+            "lysate_battery_cell",
+            registryName -> new BatteryItem(
+                    new Item.Properties()
+                            .stacksTo(1)
+                            .component(BATTERY_CELL_COMPONENT, new BatteryCellDataHandler(false, 4, 5000000, 0))
             )
     );
 
@@ -98,9 +117,12 @@ public class LysateCell {
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> LYSATE_CELL_TAB = CREATIVE_MODE_TABS.register("lysate_cell_tab", () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup.lysatecell"))
             .withTabsBefore(CreativeModeTabs.COMBAT)
-            .icon(() -> BATTERY_CELL.get().getDefaultInstance())
+            .icon(() -> LYSATE_BATTERY_CELL.get().getDefaultInstance())
             .displayItems((parameters, output) -> {
-                output.accept(BATTERY_CELL.get());
+                output.accept(BASIC_BATTERY_CELL.get());
+                output.accept(ADVANCED_BATTERY_CELL.get());
+                output.accept(EXTREME_BATTERY_CELL.get());
+                output.accept(LYSATE_BATTERY_CELL.get());
                 output.accept(DUMMY_ITEM.get());
                 output.accept(LYSATE_CELL_BLOCK_ITEM.get());
             }).build());
@@ -153,10 +175,49 @@ public class LysateCell {
                             new ComponentEnergyStorage(
                                     itemStack,
                                     LysateCell.LYSATE_ENERGY.get(),
-                                    3200, 100, 100),
+                                    10000, 1000, 1000),
 
-                    BATTERY_CELL,
+                    BASIC_BATTERY_CELL,
                     DUMMY_ITEM
+            );
+            event.registerItem(
+                    Capabilities.EnergyStorage.ITEM,
+
+
+                    (itemStack, context) ->
+
+                            new ComponentEnergyStorage(
+                                    itemStack,
+                                    LysateCell.LYSATE_ENERGY.get(),
+                                    100000, 10000, 10000),
+
+                    ADVANCED_BATTERY_CELL
+            );
+            event.registerItem(
+                    Capabilities.EnergyStorage.ITEM,
+
+
+                    (itemStack, context) ->
+
+                            new ComponentEnergyStorage(
+                                    itemStack,
+                                    LysateCell.LYSATE_ENERGY.get(),
+                                    1000000, 100000, 100000),
+
+                    EXTREME_BATTERY_CELL
+            );
+            event.registerItem(
+                    Capabilities.EnergyStorage.ITEM,
+
+
+                    (itemStack, context) ->
+
+                            new ComponentEnergyStorage(
+                                    itemStack,
+                                    LysateCell.LYSATE_ENERGY.get(),
+                                    5000000, 500000, 500000),
+
+                    LYSATE_BATTERY_CELL
             );
         }
     }

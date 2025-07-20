@@ -1,6 +1,9 @@
 {
   "itemGroup.lysatecell": "Lysate Cell",
-  "item.lysatecell.battery_cell": "Battery Cell",
+  "item.lysatecell.basic_battery_cell": "Basic Battery Cell",
+  "item.lysatecell.advanced_battery_cell": "Advanced Battery Cell",
+  "item.lysatecell.extreme_battery_cell": "Extreme Battery Cell",
+  "item.lysatecell.lysate_battery_cell": "Lysate Cell",
 
   "tooltip.lysatecell.energy": "%s/%s RF"
 

@@ -24,7 +24,7 @@ public class BatteryItem extends Item {
     }
 
     @Override
-    public @NotNull InteractionResultHolder < ItemStack > use(Level level, Player player, @NotNull InteractionHand usedHand) {
+    public @NotNull InteractionResultHolder<ItemStack> use(Level level, Player player, @NotNull InteractionHand usedHand) {
 
         ItemStack offhand = player.getItemInHand(usedHand);
         ItemStack mainHand = player.getMainHandItem();
@@ -61,16 +61,52 @@ public class BatteryItem extends Item {
         return InteractionResultHolder.pass(offhand);
     }
 
-    @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List < Component > tooltipComponents, TooltipFlag tooltipFlag) {
+    private String formatEnergy(int energy) {
+        if (energy >= 1000000) {
+            return String.format("%.1fM", energy / 1_000_000.0);
+        } else if (energy >= 10000) {
+            return String.format("%.1fk", energy / 1000.0);
+        } else {
+            return String.valueOf(energy);
+        }
+    }
 
+    @Override
+    public boolean isBarVisible(ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public int getBarColor(ItemStack stack) {
+        return 0x863acd;
+    }
+
+    @Override
+    public int getBarWidth(ItemStack stack) {
+        IEnergyStorage energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
+        return Math.round(energyStorage.getEnergyStored() * 100f / energyStorage.getMaxEnergyStored() * 13) / 100;
+    }
+
+    @Override
+    public boolean isRepairable(ItemStack stack) {
+        return false;
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         IEnergyStorage energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
 
         if (energyStorage != null) {
-            var maxStorage = energyStorage.getMaxEnergyStored();
-            var currentStorage = energyStorage.getEnergyStored();
+            int maxStorage = energyStorage.getMaxEnergyStored();
+            int currentStorage = energyStorage.getEnergyStored();
 
-            tooltipComponents.add(Component.translatable("tooltip.lysatecell.energy", currentStorage, maxStorage).withStyle(ChatFormatting.GOLD));
+            String formattedCurrent = formatEnergy(currentStorage);
+            String formattedMax = formatEnergy(maxStorage);
+
+            tooltipComponents.add(
+                    Component.translatable("tooltip.lysatecell.energy", formattedCurrent, formattedMax)
+                            .withStyle(ChatFormatting.GOLD)
+            );
         }
     }
 }
