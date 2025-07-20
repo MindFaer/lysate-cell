@@ -78,18 +78,23 @@ public class BatteryItem extends Item {
 
     @Override
     public int getBarColor(ItemStack stack) {
-        return 0x863acd;
+        var component = stack.get(LysateCell.BATTERY_CELL_COMPONENT);
+        int type = component.celltype();
+
+        return switch (type) {
+            case 1 -> 0xFF7007; // Oritech Orange
+            case 2 -> 0x49CE00; // Green
+            case 3 -> 0x4670A9; // Blue
+            case 4 -> 0x863ACD; // Purple
+            default -> 0xFF0000; // White, Fallback
+        };
     }
 
     @Override
     public int getBarWidth(ItemStack stack) {
         IEnergyStorage energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
-        return Math.round(energyStorage.getEnergyStored() * 100f / energyStorage.getMaxEnergyStored() * 13) / 100;
-    }
-
-    @Override
-    public boolean isRepairable(ItemStack stack) {
-        return false;
+        return Math
+                .round(energyStorage.getEnergyStored() * 100f / energyStorage.getMaxEnergyStored() * 13) / 100;
     }
 
     @Override
@@ -104,9 +109,16 @@ public class BatteryItem extends Item {
             String formattedMax = formatEnergy(maxStorage);
 
             tooltipComponents.add(
-                    Component.translatable("tooltip.lysatecell.energy", formattedCurrent, formattedMax)
+                    Component
+                            .translatable("tooltip.lysatecell.energy", formattedCurrent, formattedMax)
                             .withStyle(ChatFormatting.GOLD)
             );
         }
     }
+
+    @Override
+    public boolean isRepairable(ItemStack stack) {
+        return false;
+    }
+
 }
