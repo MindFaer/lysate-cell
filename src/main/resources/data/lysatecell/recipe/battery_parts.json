@@ -1,0 +1,29 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "ccc",
+        "rRg",
+        "SSS"
+    ],
+    "key": {
+        "S": {
+            "item": "minecraft:stone"
+        },
+        "c": {
+            "item": "minecraft:copper_ingot"
+        },
+        "r": {
+            "item": "minecraft:redstone"
+        },
+        "R": {
+            "item": "minecraft:repeater"
+        },
+        "g": {
+            "item": "minecraft:gold_ingot"
+        }
+    },
+    "result": {
+        "id": "lysatecell:battery_parts"
+    },
+    "show_notification": false
+}

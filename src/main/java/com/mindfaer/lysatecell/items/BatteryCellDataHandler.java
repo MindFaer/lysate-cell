@@ -8,21 +8,19 @@ import net.minecraft.network.codec.StreamCodec;
 
 import java.util.Objects;
 
-public record BatteryCellDataHandler (boolean cellin, int celltype, int cellsize, int cellcharge) {
+public record BatteryCellDataHandler(boolean cellin, int celltype, int cellsize, int cellcharge) {
 
-
-    public static final Codec<BatteryCellDataHandler> CODEC = RecordCodecBuilder.create(instance ->
+    public static final Codec < BatteryCellDataHandler > CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
                     Codec.BOOL.fieldOf("cell_in").forGetter(BatteryCellDataHandler::cellin),
                     Codec.INT.fieldOf("cell_type").forGetter(BatteryCellDataHandler::celltype),
                     Codec.INT.fieldOf("cell_size").forGetter(BatteryCellDataHandler::cellsize),
                     Codec.INT.fieldOf("cell_charge").forGetter(BatteryCellDataHandler::cellcharge)
 
-                    ).apply(instance, BatteryCellDataHandler::new)
+            ).apply(instance, BatteryCellDataHandler::new)
     );
 
-
-    public static final StreamCodec<ByteBuf, BatteryCellDataHandler> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec < ByteBuf, BatteryCellDataHandler > STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.BOOL, BatteryCellDataHandler::cellin,
             ByteBufCodecs.INT, BatteryCellDataHandler::celltype,
             ByteBufCodecs.INT, BatteryCellDataHandler::cellsize,
@@ -35,7 +33,7 @@ public record BatteryCellDataHandler (boolean cellin, int celltype, int cellsize
 
     @Override
     public int hashCode() {
-        return (cellin() ? 1 : 0) * 11 + celltype * 3  + cellsize * 17 + cellcharge * 7;
+        return (cellin() ? 1 : 0) * 11 + celltype * 3 + cellsize * 17 + cellcharge * 7;
     }
 
     @Override

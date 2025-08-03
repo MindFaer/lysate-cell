@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "OEO",
+    "ABA",
+    "RNR"
+  ],
+  "key": {
+    "A": {
+      "item": "lysatecell:extreme_battery_cell"
+    },
+    "B": {
+      "item": "lysatecell:battery_parts"
+    },
+    "O": {
+      "item": "minecraft:obsidian"
+    },
+    "E": {
+      "item": "minecraft:end_stone"
+    },
+    "R": {
+      "item": "minecraft:rotten_flesh"
+    },
+    "N": {
+      "item": "minecraft:netherite_ingot"
+    }
+  },
+  "result": {
+    "id": "lysatecell:lysate_battery_cell"
+  },
+  "show_notification": false
+}

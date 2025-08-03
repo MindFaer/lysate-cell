@@ -4,7 +4,22 @@
   "item.lysatecell.advanced_battery_cell": "Advanced Battery Cell",
   "item.lysatecell.extreme_battery_cell": "Extreme Battery Cell",
   "item.lysatecell.lysate_battery_cell": "Lysate Cell",
+  "item.lysatecell.battery_parts": "Battery Parts",
+  "item.lysatecell.dummy_item": "Lysate Cell",
 
-  "tooltip.lysatecell.energy": "%s/%s RF"
 
+
+  "tooltip.lysatecell.extra_info": "[Hold Shift For Extra Info]",
+  "tooltip.lysatecell.extra_info_expanded": "Hold a battery in the offhand with an item that can store energy and then right-click to slot the battery into the item. Shift and right-click with an item containing a battery to eject it",
+
+  "tooltip.lysatecell.energy": "%s/%s RF",
+  "tooltip.lysatecell.energytooltip": "Battery Charge: %s/%s",
+  "tooltip.lysatecell.tier": "%s",
+
+  "tooltip.lysatecell.cell.cell1": "[★☆☆☆]",
+  "tooltip.lysatecell.cell.cell2": "[★★☆☆]",
+  "tooltip.lysatecell.cell.cell3": "[★★★☆]",
+  "tooltip.lysatecell.cell.cell4": "[★★★★]",
+
+  "tooltip.lysatecell.cell.unknown": "[????]"
 }

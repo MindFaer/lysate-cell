@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "iBi",
+    "iIi",
+    "iIi"
+  ],
+  "key": {
+    "I": {
+      "item": "lysatecell:basic_battery_cell"
+    },
+    "B": {
+      "item": "lysatecell:battery_parts"
+    },
+    "i": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "result": {
+    "id": "lysatecell:advanced_battery_cell"
+  },
+  "show_notification": false
+}
