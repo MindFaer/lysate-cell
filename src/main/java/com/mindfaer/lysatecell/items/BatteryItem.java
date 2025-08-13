@@ -24,49 +24,51 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import static com.mindfaer.lysatecell.LysateCell.ClientModEvents.BATTERY_KEY;
+
 public class BatteryItem extends Item {
     public BatteryItem(Properties properties) {
         super(properties);
     }
 
-    @Override
-    public @NotNull InteractionResultHolder < ItemStack > use(Level level, Player player, @NotNull InteractionHand usedHand) {
-
-        ItemStack offhand = player.getItemInHand(usedHand);
-        ItemStack mainHand = player.getMainHandItem();
-        var cap = mainHand.getCapability(Capabilities.EnergyStorage.ITEM);
-        IEnergyStorage energyStorage = offhand.getCapability(Capabilities.EnergyStorage.ITEM);
-
-        if (!level.isClientSide() && player.getOffhandItem() == offhand && !mainHand.has(LysateCell.BATTERY_CELL_COMPONENT) && cap != null) {
-
-            var batteryCheck = offhand.get(LysateCell.BATTERY_CELL_COMPONENT);
-
-            if (batteryCheck != null) {
-
-                level.playSound(null,
-                        player.getX(),
-                        player.getY(),
-                        player.getZ(),
-                        SoundEvents.COPPER_TRAPDOOR_CLOSE,
-                        SoundSource.PLAYERS,
-                        0.75f,
-                        1.5f
-                );
-
-                mainHand.set(LysateCell.BATTERY_CELL_COMPONENT, new BatteryCellDataHandler(
-                        true,
-                        batteryCheck.celltype(),
-                        energyStorage.getMaxEnergyStored(),
-                        energyStorage.getEnergyStored()
-                ));
-
-                player.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
-
-                return InteractionResultHolder.consume(offhand);
-            }
-        }
-        return InteractionResultHolder.pass(offhand);
-    }
+//    @Override
+//    public @NotNull InteractionResultHolder < ItemStack > use(Level level, Player player, @NotNull InteractionHand usedHand) {
+//
+//        ItemStack offhand = player.getItemInHand(usedHand);
+//        ItemStack mainHand = player.getMainHandItem();
+//        var cap = mainHand.getCapability(Capabilities.EnergyStorage.ITEM);
+//        IEnergyStorage energyStorage = offhand.getCapability(Capabilities.EnergyStorage.ITEM);
+//
+//        if (!level.isClientSide() && player.getOffhandItem() == offhand && !mainHand.has(LysateCell.BATTERY_CELL_COMPONENT) && cap != null) {
+//
+//            var batteryCheck = offhand.get(LysateCell.BATTERY_CELL_COMPONENT);
+//
+//            if (batteryCheck != null) {
+//
+//                level.playSound(null,
+//                        player.getX(),
+//                        player.getY(),
+//                        player.getZ(),
+//                        SoundEvents.COPPER_TRAPDOOR_CLOSE,
+//                        SoundSource.PLAYERS,
+//                        0.75f,
+//                        1.5f
+//                );
+//
+//                mainHand.set(LysateCell.BATTERY_CELL_COMPONENT, new BatteryCellDataHandler(
+//                        true,
+//                        batteryCheck.celltype(),
+//                        energyStorage.getMaxEnergyStored(),
+//                        energyStorage.getEnergyStored()
+//                ));
+//
+//                player.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
+//
+//                return InteractionResultHolder.consume(offhand);
+//            }
+//        }
+//        return InteractionResultHolder.pass(offhand);
+//    }
 
     private String formatEnergy(int energy) {
         if (energy >= 1000000) {
@@ -125,10 +127,12 @@ public class BatteryItem extends Item {
 
         var showExtra = Screen.hasShiftDown();
 
+        String keyName = BATTERY_KEY.get().getTranslatedKeyMessage().getString();
+
         if (showExtra) {
             tooltipComponents.add(
                     Component
-                            .translatable("tooltip.lysatecell.extra_info_expanded")
+                            .translatable("tooltip.lysatecell.extra_info_expanded", keyName)
                             .withStyle(ChatFormatting.GRAY)
             );
         } else {

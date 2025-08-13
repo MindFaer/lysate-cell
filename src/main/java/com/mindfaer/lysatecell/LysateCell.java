@@ -1,7 +1,11 @@
 package com.mindfaer.lysatecell;
 
+import ca.weblite.objc.Client;
+import com.google.common.graph.Network;
+import com.mindfaer.lysatecell.items.ActivateBatteryPacket;
 import com.mindfaer.lysatecell.items.BatteryCellDataHandler;
 import com.mindfaer.lysatecell.items.BatteryItem;
+import com.mindfaer.lysatecell.items.ServerUtilities;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.serialization.Codec;
 import net.minecraft.client.KeyMapping;
@@ -163,6 +167,28 @@ public class LysateCell {
 
     @EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD)
     public class ClientModEvents {
+
+
+        public static final Lazy<KeyMapping> BATTERY_KEY = Lazy.of(() -> new KeyMapping(
+                "key.lysatecell.batterykey", // Will be localized using this translation key
+                KeyConflictContext.UNIVERSAL,
+                KeyModifier.SHIFT, // Default mapping requires shift to be held down
+                InputConstants.Type.KEYSYM, // Default mapping is on the keyboard
+                GLFW.GLFW_KEY_R, // Default key is R
+                "key.categories.misc"
+        ));
+
+        @SubscribeEvent
+        public static void registerBindings(RegisterKeyMappingsEvent event) {
+            event.register(BATTERY_KEY.get());
+        }
+
+        @SubscribeEvent
+        public static void onClientTick(ClientTickEvent.Post event) {
+        while (BATTERY_KEY.get().consumeClick()) {
+            ServerUtilities.sendToServer(new ActivateBatteryPacket());
+            }
+        }
 
         @SubscribeEvent
         public static void registerCapabilities(RegisterCapabilitiesEvent event) {
